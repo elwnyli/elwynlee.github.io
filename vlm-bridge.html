@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLM Bridge — 土豆熬孬土豆</title>
+    <meta name="description" content="让 DeepSeek / Kimi 看懂图片的 Claude Code 扩展技能，小白也能装。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+<!-- 全站装饰元素 -->
+<div class="decor-el decor-1" style="top:5%;left:3%;width:55px;height:55px;animation:decorFloat1 7s infinite"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="8" fill="#f0c040"/><ellipse cx="30" cy="12" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5"/><ellipse cx="46" cy="24" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(72,30,30)"/><ellipse cx="44" cy="40" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(144,30,30)"/><ellipse cx="22" cy="44" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(216,30,30)"/><ellipse cx="14" cy="24" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(288,30,30)"/></svg></div>
+<div class="decor-el decor-2" style="top:14%;right:4%;width:45px;height:60px;animation:decorFloat2 8s 1s infinite"><svg viewBox="0 0 50 60"><path d="M25 55c-1-3-1-8 0-10 2 0 4 0 6 1" stroke="#7a9a4a" stroke-width="2" fill="none"/><path d="M10 22c3-6 12-10 15-5 3 6-2 12-8 10" fill="#f0a0b0" stroke="#d08090" stroke-width="1.5"/><path d="M25 18c0-8 8-12 14-6 4 4 0 12-6 10" fill="#f0b0c0" stroke="#d08090" stroke-width="1.5"/><path d="M28 25c6-4 14 0 12 8-2 6-10 6-12 0" fill="#f0a0b0" stroke="#d08090" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-3" style="top:40%;left:2%;width:50px;height:50px;animation:decorFloat3 9s 0.5s infinite"><svg viewBox="0 0 50 50"><path d="M10 40c2-10 15-20 25-18 5 1 8 6 5 10-3 5-10 4-12 0-1-3 2-6 4-4" stroke="#7a9a4a" stroke-width="2" fill="#c8e0a0" stroke-linecap="round"/><path d="M14 38c1-8 8-14 16-12" stroke="#6a8a3a" stroke-width="1.5" fill="none"/></svg></div>
+<div class="decor-el decor-4" style="top:35%;right:3%;width:40px;height:40px;animation:decorFloat1 6s 2s infinite"><svg viewBox="0 0 40 40"><path d="M20 4l3 10 10 2-7 8 2 11-8-5-8 5 2-11-7-8 10-2z" fill="#f0d060" stroke="#d0b040" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-5" style="top:65%;left:5%;width:40px;height:40px;animation:decorFloat2 7.5s 1.5s infinite"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="4" fill="#f0f0c0"/><circle cx="20" cy="8" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/><circle cx="30" cy="16" r="7" fill="#c8ddf4" stroke="#8090c0" stroke-width="1.5"/><circle cx="28" cy="28" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/><circle cx="14" cy="28" r="7" fill="#c8ddf4" stroke="#8090c0" stroke-width="1.5"/><circle cx="10" cy="16" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-6" style="top:72%;right:3%;width:55px;height:45px;animation:decorFloat3 8.5s 0.8s infinite"><svg viewBox="0 0 55 45"><path d="M5 35c5-12 20-22 30-20 4 1 8 4 6 8-2 5-8 4-10 1-1-2 2-5 4-3" stroke="#7a9a4a" stroke-width="2" fill="#c8e8b0" stroke-linecap="round"/><path d="M25 15c-3-8-10-12-15-8-3 3 0 8 5 6" stroke="#6a8a3a" stroke-width="1.8" fill="#b8d898"/><path d="M32 20c4-6 12-8 15-3 2 4-2 8-7 5" stroke="#6a8a3a" stroke-width="1.8" fill="#b8d898"/></svg></div>
+<div class="decor-el decor-7" style="top:22%;left:48%;width:35px;height:35px;animation:decorFloat1 10s 3s infinite"><svg viewBox="0 0 35 35"><path d="M17 30c-8-4-15-12-15-18 0-6 4-10 9-10 4 0 6 3 6 6 0-3 2-6 6-6 5 0 9 4 9 10 0 6-7 14-15 18z" fill="#f0b0b0" stroke="#d08080" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-8" style="top:58%;left:52%;width:50px;height:50px;animation:decorFloat2 7s 2s infinite"><svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="6" fill="#3a2a1a"/><circle cx="25" cy="10" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/><circle cx="38" cy="18" r="10" fill="#f0b050" stroke="#d08030" stroke-width="1.5"/><circle cx="37" cy="34" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/><circle cx="18" cy="38" r="10" fill="#f0b050" stroke="#d08030" stroke-width="1.5"/><circle cx="12" cy="18" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-9" style="top:85%;left:8%;width:35px;height:50px;animation:decorFloat3 6.5s 1s infinite"><svg viewBox="0 0 35 50"><path d="M17 50c0-15 1-25 0-32-1 2-3 2-4 1" stroke="#7a9a4a" stroke-width="2" fill="none"/><ellipse cx="16" cy="12" rx="8" ry="10" fill="#f0c0c0" stroke="#d09090" stroke-width="1.5"/><path d="M10 8c-2-3 0-6 3-4 2 2 0 5-2 4" fill="#c8e0a0" stroke="#7a9a4a" stroke-width="1"/></svg></div>
+<div class="decor-el decor-10" style="top:88%;right:6%;width:50px;height:40px;animation:decorFloat1 9s 1.5s infinite"><svg viewBox="0 0 50 40"><circle cx="10" cy="20" r="4" fill="#f0d0a0"/><circle cx="25" cy="10" r="3" fill="#c0d8f0"/><circle cx="40" cy="22" r="5" fill="#f0b0b0"/><circle cx="18" cy="32" r="3.5" fill="#c8e0b0"/><circle cx="35" cy="34" r="3" fill="#f0c0d0"/></svg></div>
+<div class="decor-el decor-11" style="top:32%;right:14%;width:35px;height:40px;animation:decorFloat3 8s 2.5s infinite"><svg viewBox="0 0 35 40"><rect x="13" y="18" width="6" height="16" rx="3" fill="#f5efe0"/><ellipse cx="16" cy="16" rx="14" ry="10" fill="#e08060" stroke="#c06040" stroke-width="1.5"/><circle cx="10" cy="12" r="2.5" fill="#fff" opacity="0.7"/><circle cx="20" cy="10" r="2" fill="#fff" opacity="0.7"/><circle cx="15" cy="18" r="1.5" fill="#fff" opacity="0.7"/></svg></div>
+<div class="decor-el decor-12" style="top:15%;right:22%;width:45px;height:40px;animation:decorFloat2 7s 0.5s infinite"><svg viewBox="0 0 45 40"><ellipse cx="25" cy="20" rx="12" ry="9" fill="#f0c8e0" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="14" cy="20" rx="10" ry="8" fill="#e8b8d8" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="25" cy="32" rx="8" ry="6" fill="#f0c8e0" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="16" cy="32" rx="7" ry="5" fill="#e8b8d8" stroke="#d0a0c0" stroke-width="1.5"/><line x1="20" y1="18" x2="20" y2="34" stroke="#a080a0" stroke-width="2"/></svg></div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="site-logo"><img src="logo.png" alt="logo" class="site-logo-img">土豆熬孬土豆</a>
+        <nav>
+            <ul class="site-nav">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="tutorials.html">教程</a></li>
+                <li><a href="skills.html">Skills</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+
+    <div class="article-header">
+        <a href="javascript:history.back()" class="back-link">&larr; 返回上一页</a>
+        <h1>VLM Bridge：让 DeepSeek / Kimi 看懂图片</h1>
+        <p class="subtitle">纯文本模型本来看不懂图片，装了这个 Skill 之后，截图拖进去 AI 就能看图说话了</p>
+    </div>
+
+    <div class="tip" style="margin-bottom:24px;">
+        <div class="tip-title">🚀 最快安装方式（推荐）</div>
+        <p>下载下面的 .md 文件，<strong>先准备好一个视觉模型 API Key</strong>（推荐 ModelScope，免费注册即得），然后把文件发给 Claude Code 说：</p>
+        <p style="background:#f3efe4;padding:8px 14px;border-radius:6px;font-size:0.88rem;margin:8px 0;"><code>帮我按照这份文档配置 VLM Bridge，我的 API Key 是 ms-xxxxx</code></p>
+        <p>Claude Code 会自动完成全部配置。配完后<strong>必须重启 Claude Code</strong>。</p>
+    </div>
+
+    <div class="download-group">
+        <a href="VLM-Bridge-使用指南.md" class="download-btn" download>
+            <div class="download-left">
+                <div class="download-icon">📥</div>
+                <div class="download-label">
+                    <strong>VLM-Bridge-使用指南.md</strong>
+                    <span>下载后发给 Claude Code，说「帮我配置」，自动搞定</span>
+                </div>
+            </div>
+            <span class="download-arrow">&rarr;</span>
+        </a>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="tip">
+        <div class="tip-title">📖 也可以手动安装</div>
+        <p>下面是从零开始的手把手教程，每一步都有截图和代码可复制。全程大约 15 分钟。</p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">0</div>
+            <h2>开始之前：你需要准备什么</h2>
+        </div>
+        <div class="tip">
+            <div class="tip-title">准备工作清单</div>
+            <p>1. 电脑上装了 Python（命令行输入 <code>python --version</code> 检查）</p>
+            <p>2. 一个视觉模型的 API Key（推荐 ModelScope，免费额度；也支持 OpenAI、SiliconFlow）</p>
+            <p>3. 大概 15 分钟时间</p>
+        </div>
+        <p class="note">Windows 用户不需要额外装任何东西。</p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <h2>第一步：创建文件夹</h2>
+        </div>
+        <p>打开终端（Windows 按 Win+R 输入 powershell，Mac 打开 Terminal），复制下面这行命令回车：</p>
+        <div class="code-block">
+            <span class="lang-tag">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <code>mkdir -p ~/.claude/vlm-bridge/.claude/hooks</code>
+        </div>
+        <p class="note">没有任何输出就是成功了。</p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <h2>第二步：保存脚本文件</h2>
+        </div>
+        <p>用记事本新建文件，把以下脚本<strong>全选复制</strong>进去：</p>
+
+        <details class="expand-box">
+            <summary>
+                <span class="chevron">&#9654;</span>
+                点击展开完整脚本（约 200 行）
+            </summary>
+            <div class="expand-box-content">
+                <div class="code-block" style="max-height:500px;overflow-y:auto;">
+                    <span class="lang-tag">python</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<code>#!/usr/bin/env python3
+"""
+VLM Bridge — Claude Code UserPromptSubmit Hook
+"""
+import base64, json, os, platform, re, subprocess, sys, tempfile, time, urllib.request
+
+# ============================================================
+# ★ 改这里：填你的 API 信息
+# ============================================================
+CONFIG = {
+    "api_base": "https://api-inference.modelscope.cn/v1",
+    "api_key": "YOUR_API_KEY_HERE",
+    "model": "Qwen/Qwen3.5-35B-A3B",
+    "max_image_bytes": 10 * 1024 * 1024,
+    "max_images_per_turn": 8,
+    "cache_match_max_age_seconds": 120,
+    "enable_recent_scan": False,
+    "recent_age_seconds": 30,
+    "timeout": 120,
+    "vision_prompt": (
+        "Analyze ONLY the image or images attached in this current request. "
+        "Do not use or refer to any previous images. "
+        "Describe visible UI, text/OCR, errors, layout, and important details. "
+        "Reply in the language of the user request when possible."
+    ),
+}
+
+SYSTEM = platform.system()
+IMAGE_CACHE_DIR = os.path.expanduser("~/.claude/image-cache")
+IMG_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".heic", ".heif"}
+MIME = {"jpg":"jpeg","jpeg":"jpeg","png":"png","gif":"gif","webp":"webp","bmp":"bmp"}
+
+if SYSTEM == "Windows":
+    SCAN_DIRS = [
+        os.path.expandvars(r"%USERPROFILE%\Desktop"),
+        os.path.expandvars(r"%USERPROFILE%\Downloads"),
+        os.path.expandvars(r"%USERPROFILE%\Pictures\Screenshots"),
+    ]
+else:
+    SCAN_DIRS = [
+        os.path.expanduser("~/Desktop"),
+        os.path.expanduser("~/Downloads"),
+    ]
+
+def _ordered_image_refs(text):
+    refs = re.findall(r"\[Image #(\d+)\]", text)
+    out = []; seen = set()
+    for ref in refs:
+        if ref not in seen: out.append(ref); seen.add(ref)
+    return out
+
+def _find_cached_images(text):
+    refs = _ordered_image_refs(text)
+    if not refs or not os.path.isdir(IMAGE_CACHE_DIR): return []
+    now = time.time(); max_age = CONFIG["cache_match_max_age_seconds"]
+    by_ref = {}
+    try:
+        for root, _dirs, files in os.walk(IMAGE_CACHE_DIR):
+            for f in files:
+                name, ext = os.path.splitext(f)
+                if name not in refs or ext.lower() not in IMG_EXTS: continue
+                path = os.path.join(root, f)
+                try: mtime = os.path.getmtime(path)
+                except OSError: continue
+                if now - mtime > max_age: continue
+                if name not in by_ref or mtime > by_ref[name][0]: by_ref[name] = (mtime, path)
+    except PermissionError: return []
+    return [by_ref[ref][1] for ref in refs if ref in by_ref]
+
+def _grab_clipboard():
+    tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False); tmp.close()
+    try:
+        if SYSTEM == "Windows":
+            ps = f'''Add-Type -AssemblyName System.Windows.Forms,System.Drawing
+$img = [System.Windows.Forms.Clipboard]::GetImage()
+if ($img) {{ $img.Save("{tmp.name}", [System.Drawing.Imaging.ImageFormat]::Png) }}'''
+            r = subprocess.run(["powershell","-NoProfile","-Command",ps], capture_output=True, timeout=15)
+            if r.returncode == 0 and os.path.getsize(tmp.name) > 100: return tmp.name
+        elif SYSTEM == "Darwin":
+            r = subprocess.run(["pngpaste", tmp.name], capture_output=True, timeout=10)
+            if r.returncode == 0 and os.path.getsize(tmp.name) > 100: return tmp.name
+        else:
+            for cmd in (["wl-paste","--type","image/png"], ["xclip","-selection","clipboard","-t","image/png","-o"]):
+                try:
+                    with open(tmp.name, "wb") as f:
+                        r = subprocess.run(cmd, stdout=f, stderr=subprocess.DEVNULL, timeout=10)
+                    if r.returncode == 0 and os.path.getsize(tmp.name) > 100: return tmp.name
+                except: continue
+    except: pass
+    try: os.unlink(tmp.name)
+    except OSError: pass
+    return None
+
+CLIPBOARD_KEYWORDS = ["这个","截图","报错","这张","图片","看看","看一下","screenshot","clipboard","image","剪贴板"]
+
+def _should_try_clipboard(prompt):
+    return any(kw in prompt.lower() for kw in CLIPBOARD_KEYWORDS)
+
+def _limit_images(paths):
+    limit = CONFIG["max_images_per_turn"]
+    if len(paths) > limit: print(f"[vlm-bridge] limiting to {limit}", file=sys.stderr)
+    return paths[:limit]
+
+def _encode_image(path):
+    try: size = os.path.getsize(path)
+    except OSError: return None
+    if size > CONFIG["max_image_bytes"]: return None
+    with open(path, "rb") as f: data = f.read()
+    ext = os.path.splitext(path)[1].lower().lstrip(".")
+    mime = MIME.get(ext, "png")
+    return f"data:image/{mime};base64,{base64.b64encode(data).decode()}"
+
+def _call_api(image_paths):
+    content = []
+    for p in image_paths:
+        uri = _encode_image(p)
+        if uri: content.append({"type":"image_url","image_url":{"url":uri}})
+    if not content: return None
+    content.append({"type":"text","text":CONFIG["vision_prompt"]})
+    payload = {"model":CONFIG["model"],"messages":[{"role":"user","content":content}],"max_tokens":2000,"temperature":0.1}
+    url = f"{CONFIG['api_base'].rstrip('/')}/chat/completions"
+    req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type":"application/json","Authorization":f"Bearer {CONFIG['api_key']}"})
+    try:
+        with urllib.request.urlopen(req, timeout=CONFIG["timeout"]) as resp:
+            return json.loads(resp.read().decode())["choices"][0]["message"]["content"]
+    except Exception as exc:
+        print(f"[vlm-bridge] API error: {exc}", file=sys.stderr)
+        return None
+
+def _discover_images(prompt):
+    images = _find_cached_images(prompt)
+    if images:
+        print(f"[vlm-bridge] cache match: {images}", file=sys.stderr)
+        return _limit_images(images)
+    ext_alt = "|".join(re.escape(e.lstrip(".")) for e in IMG_EXTS)
+    patterns = [
+        rf"""(?:~?/[^\s"'()<>]+\.(?:{ext_alt}))""",
+        rf"""(?:[A-Za-z]:\\[^\s"'()<>]+\.(?:{ext_alt}))""",
+        rf"""(?:\\\\[^\s"'()<>]+\.(?:{ext_alt}))""",
+    ]
+    found = []; seen = set()
+    for pat in patterns:
+        for m in re.findall(pat, prompt, re.IGNORECASE):
+            path = os.path.expanduser(m) if SYSTEM != "Windows" else m
+            if os.path.isfile(path) and path not in seen: found.append(path); seen.add(path)
+    if found: return _limit_images(found)
+    if _should_try_clipboard(prompt):
+        clip = _grab_clipboard()
+        if clip: return [clip]
+    if CONFIG.get("enable_recent_scan"):
+        now = time.time(); window = CONFIG["recent_age_seconds"]
+        hits = []
+        for d in SCAN_DIRS:
+            if not os.path.isdir(d): continue
+            try:
+                for fn in os.listdir(d):
+                    p = os.path.join(d, fn)
+                    if os.path.isfile(p) and os.path.splitext(fn)[1].lower() in IMG_EXTS:
+                        age = now - os.path.getmtime(p)
+                        if 0 < age < window: hits.append((age, p))
+            except PermissionError: continue
+        return [p for _, p in sorted(hits)]
+    return []
+
+def main():
+    prompt = sys.stdin.read().strip()
+    images = _discover_images(prompt)
+    if not images: print(prompt); return
+    print(f"[vlm-bridge] analyzing {len(images)} image(s) ...", file=sys.stderr)
+    desc = _call_api(images)
+    if not desc: print(prompt); return
+    print(f"{prompt}\n\n"
+          f"[Current turn image analysis — use this for the current user request only. "
+          f"Do not treat previous image-analysis blocks as current images.]\n"
+          f"{desc}\n"
+          f"[End of current turn image analysis]")
+    for p in images:
+        if p.startswith(tempfile.gettempdir()):
+            try: os.unlink(p)
+            except OSError: pass
+
+if __name__ == "__main__":
+    main()</code>
+                </div>
+            </div>
+        </details>
+
+        <p style="margin-top:16px;">保存到这个路径（把「你的用户名」换成你电脑的用户名）：</p>
+        <div class="code-block">
+            <span class="lang-tag">路径</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <code>C:\Users\你的用户名\.claude\vlm-bridge\.claude\hooks\image_preprocess.py</code>
+        </div>
+
+        <div class="warning">
+            <div class="tip-title">保存后别忘了</div>
+            <p>打开脚本，找到顶部的 <code>YOUR_API_KEY_HERE</code>，替换成你自己的 API Key。</p>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">3</div>
+            <h2>第三步：获取 API Key（三选一）</h2>
+        </div>
+
+        <h3 style="font-size:1rem;margin-top:16px;">方案 A：ModelScope（推荐，有免费额度）</h3>
+        <p>1. 打开 <a class="inline-link" href="https://modelscope.cn" target="_blank">modelscope.cn</a>，注册并登录</p>
+        <p>2. 进入「设置 → 账号绑定」→ <strong>绑定阿里云账号</strong>（很多人漏掉这步！）</p>
+        <p>3. 进入「设置 → API Key」→ 创建新 Key，复制 <code>ms-</code> 开头的字符串</p>
+        <p>4. 把脚本里的 <code>YOUR_API_KEY_HERE</code> 替换为这个 Key</p>
+
+        <h3 style="font-size:1rem;margin-top:16px;">方案 B：SiliconFlow（国内直达，也有免费额度）</h3>
+        <p>注册 <a class="inline-link" href="https://siliconflow.cn" target="_blank">siliconflow.cn</a>，获取 Key 后改脚本里两处：</p>
+        <div class="code-block">
+            <span class="lang-tag">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <code>"api_base": "https://api.siliconflow.cn/v1",
+"api_key": "你的SiliconFlow Key",
+"model": "Qwen/Qwen2-VL-72B-Instruct",</code>
+        </div>
+
+        <h3 style="font-size:1rem;margin-top:16px;">方案 C：OpenAI</h3>
+        <div class="code-block">
+            <span class="lang-tag">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <code>"api_base": "https://api.openai.com/v1",
+"api_key": "sk-你的OpenAI Key",
+"model": "gpt-4o",</code>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">4</div>
+            <h2>第四步：注册 Hook（让 Claude Code 知道你装了这个脚本）</h2>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">这一步是干什么的？</div>
+            <p>你刚才保存的脚本，Claude Code 并不知道它的存在。Hook 就是告诉 Claude Code：「每次发消息之前，先跑一下这个脚本」。注册 Hook 就是填一个配置文件。</p>
+        </div>
+
+        <h3 style="font-size:1rem;margin-top:20px;">怎么操作：</h3>
+
+        <p><strong>情况一：你从来没改过 settings.json（大多数人是这个情况）</strong></p>
+        <p>直接把下面的内容全选复制，粘贴到下面这个文件里（文件不存在就新建）：</p>
+        <div class="code-block">
+            <span class="lang-tag">文件路径</span>
+            <code>C:\Users\你的用户名\.claude\settings.json</code>
+        </div>
+
+        <p class="note">怎么打开这个文件：打开记事本 → 文件 → 打开 → 在地址栏粘贴上面这个路径 → 回车。如果提示文件不存在，就点「新建」。</p>
+
+        <details class="expand-box">
+            <summary>
+                <span class="chevron">&#9654;</span>
+                Windows 用户：复制下面这整段
+            </summary>
+            <div class="expand-box-content">
+                <div class="code-block" style="margin-top:16px;">
+                    <span class="lang-tag">json</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<code>{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python ~/.claude/vlm-bridge/.claude/hooks/image_preprocess.py",
+            "timeout": 180
+          }
+        ]
+      }
+    ]
+  }
+}</code>
+                </div>
+                <p class="note" style="margin-top:8px;">注意：命令里写的是 <code>python</code>，不是 <code>python3</code>。</p>
+            </div>
+        </details>
+
+        <details class="expand-box">
+            <summary>
+                <span class="chevron">&#9654;</span>
+                Mac / Linux 用户：复制下面这整段
+            </summary>
+            <div class="expand-box-content">
+                <div class="code-block" style="margin-top:16px;">
+                    <span class="lang-tag">json</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+<code>{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/vlm-bridge/.claude/hooks/image_preprocess.py",
+            "timeout": 180
+          }
+        ]
+      }
+    ]
+  }
+}</code>
+                </div>
+                <p style="margin-top:12px;">还要给脚本加执行权限，终端里运行：</p>
+                <div class="code-block">
+                    <span class="lang-tag">bash</span>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <code>chmod +x ~/.claude/vlm-bridge/.claude/hooks/image_preprocess.py</code>
+                </div>
+            </div>
+        </details>
+
+        <p style="margin-top:20px;"><strong>情况二：你的 settings.json 里已经有其他配置了</strong></p>
+        <p>那就只加 <code>"hooks"</code> 这一块，加到已有内容的大括号里面。不会操作的话，直接把文件内容复制发给 Claude Code，说「帮我把 hook 配置加进去」，它会帮你改。</p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">5</div>
+            <h2>第五步：重启并测试</h2>
+        </div>
+        <p><strong>必须重启 Claude Code</strong>——关掉终端重开，Hook 才会生效。</p>
+        <p>测试：截一张图拖进 Claude Code → 输入「帮我看看这张图」→ <strong>立刻发送</strong>（不要等超过 2 分钟）。</p>
+        <p>如果 AI 回复中出现了 <code>[Current turn image analysis ...]</code> 开头的文字描述，就说明成功了。</p>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>测试成功截图：拖入图片后 AI 返回了图片描述</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">6</div>
+            <h2>常见问题排查</h2>
+        </div>
+        <div class="qa-list">
+            <div class="qa-item">
+                <div class="qa-q">拖入图片后没任何反应？</div>
+                <div class="qa-a">检查：① 重启 Claude Code 了吗？② settings.json 路径写对了吗？</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">回复里有 <code>[Image #1]</code> 但没有分析文字？</div>
+                <div class="qa-a">拖入图片后等太久才发送。缓存只有 120 秒，拖入后立即发送。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">终端报 <code>python3: command not found</code>？</div>
+                <div class="qa-a">Windows 用户 settings.json 里要用 <code>python</code>，不要用 <code>python3</code>。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">终端报 <code>401 Unauthorized</code>？</div>
+                <div class="qa-a">Key 写错，或者 ModelScope 没绑阿里云账号。去 modelscope.cn 绑定。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">想换别的视觉模型？</div>
+                <div class="qa-a">改脚本 CONFIG 里的 <code>api_base</code>、<code>api_key</code>、<code>model</code> 即可。</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">💡</div>
+            <h2>原理（一句话）</h2>
+        </div>
+        <p>拖入图片 → Claude Code 缓存图片生成 <code>[Image #N]</code> → Hook 把图片发给视觉模型分析 → 文字描述塞进消息 → 纯文本模型基于描述回答。</p>
+        <p><strong>只分析当前这轮</strong>的图片，不会把旧截图混进来。</p>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <span class="footer-brand">土豆熬孬土豆</span>
+    本站由 <a href="index.html">Elwyn</a> 维护
+</footer>
+
+<script>
+(function() {
+    var bar = document.getElementById('progressBar');
+    window.addEventListener('scroll', function() {
+        var h = document.body.scrollHeight - window.innerHeight;
+        bar.style.width = h > 0 ? Math.min(100, (window.scrollY / h) * 100) + '%' : '0%';
+    }, { passive: true });
+})();
+function copyCode(btn) {
+    var code = btn.parentElement.querySelector('code');
+    navigator.clipboard.writeText(code.innerText).then(function() {
+        btn.textContent = '已复制'; btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>
