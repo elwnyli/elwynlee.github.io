@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小白向：用 Claude Code 从零搭建个人网站全教程 — 土豆熬孬土豆</title>
+    <meta name="description" content="零基础用 Claude Code 搭建个人网站的手把手教程，从提问到部署，附提示词模板。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="site.css">
+    <style>
+        /* 配图占位样式 */
+        .img-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 160px;
+            background: #f5f1e9;
+            border: 2px dashed #d9ceb8;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 40px 20px;
+            cursor: default;
+            transition: all 0.2s;
+        }
+        .img-placeholder:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #fdf8f0;
+        }
+        .img-placeholder strong {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        /* 提示词卡片 */
+        .prompt-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+        .prompt-card .prompt-label {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .prompt-card .prompt-text {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+<!-- 全站装饰元素 -->
+<div class="decor-el decor-1" style="top:5%;left:3%;width:55px;height:55px;animation:decorFloat1 7s infinite"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="8" fill="#f0c040"/><ellipse cx="30" cy="12" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5"/><ellipse cx="46" cy="24" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(72,30,30)"/><ellipse cx="44" cy="40" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(144,30,30)"/><ellipse cx="22" cy="44" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(216,30,30)"/><ellipse cx="14" cy="24" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(288,30,30)"/></svg></div>
+<div class="decor-el decor-2" style="top:14%;right:4%;width:45px;height:60px;animation:decorFloat2 8s 1s infinite"><svg viewBox="0 0 50 60"><path d="M25 55c-1-3-1-8 0-10 2 0 4 0 6 1" stroke="#7a9a4a" stroke-width="2" fill="none"/><path d="M10 22c3-6 12-10 15-5 3 6-2 12-8 10" fill="#f0a0b0" stroke="#d08090" stroke-width="1.5"/><path d="M25 18c0-8 8-12 14-6 4 4 0 12-6 10" fill="#f0b0c0" stroke="#d08090" stroke-width="1.5"/><path d="M28 25c6-4 14 0 12 8-2 6-10 6-12 0" fill="#f0a0b0" stroke="#d08090" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-3" style="top:40%;left:2%;width:50px;height:50px;animation:decorFloat3 9s 0.5s infinite"><svg viewBox="0 0 50 50"><path d="M10 40c2-10 15-20 25-18 5 1 8 6 5 10-3 5-10 4-12 0-1-3 2-6 4-4" stroke="#7a9a4a" stroke-width="2" fill="#c8e0a0" stroke-linecap="round"/><path d="M14 38c1-8 8-14 16-12" stroke="#6a8a3a" stroke-width="1.5" fill="none"/></svg></div>
+<div class="decor-el decor-4" style="top:35%;right:3%;width:40px;height:40px;animation:decorFloat1 6s 2s infinite"><svg viewBox="0 0 40 40"><path d="M20 4l3 10 10 2-7 8 2 11-8-5-8 5 2-11-7-8 10-2z" fill="#f0d060" stroke="#d0b040" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-5" style="top:65%;left:5%;width:40px;height:40px;animation:decorFloat2 7.5s 1.5s infinite"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="4" fill="#f0f0c0"/><circle cx="20" cy="8" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/><circle cx="30" cy="16" r="7" fill="#c8ddf4" stroke="#8090c0" stroke-width="1.5"/><circle cx="28" cy="28" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/><circle cx="14" cy="28" r="7" fill="#c8ddf4" stroke="#8090c0" stroke-width="1.5"/><circle cx="10" cy="16" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-6" style="top:72%;right:3%;width:55px;height:45px;animation:decorFloat3 8.5s 0.8s infinite"><svg viewBox="0 0 55 45"><path d="M5 35c5-12 20-22 30-20 4 1 8 4 6 8-2 5-8 4-10 1-1-2 2-5 4-3" stroke="#7a9a4a" stroke-width="2" fill="#c8e8b0" stroke-linecap="round"/><path d="M25 15c-3-8-10-12-15-8-3 3 0 8 5 6" stroke="#6a8a3a" stroke-width="1.8" fill="#b8d898"/><path d="M32 20c4-6 12-8 15-3 2 4-2 8-7 5" stroke="#6a8a3a" stroke-width="1.8" fill="#b8d898"/></svg></div>
+<div class="decor-el decor-7" style="top:22%;left:48%;width:35px;height:35px;animation:decorFloat1 10s 3s infinite"><svg viewBox="0 0 35 35"><path d="M17 30c-8-4-15-12-15-18 0-6 4-10 9-10 4 0 6 3 6 6 0-3 2-6 6-6 5 0 9 4 9 10 0 6-7 14-15 18z" fill="#f0b0b0" stroke="#d08080" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-8" style="top:58%;left:52%;width:50px;height:50px;animation:decorFloat2 7s 2s infinite"><svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="6" fill="#3a2a1a"/><circle cx="25" cy="10" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/><circle cx="38" cy="18" r="10" fill="#f0b050" stroke="#d08030" stroke-width="1.5"/><circle cx="37" cy="34" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/><circle cx="18" cy="38" r="10" fill="#f0b050" stroke="#d08030" stroke-width="1.5"/><circle cx="12" cy="18" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-9" style="top:85%;left:8%;width:35px;height:50px;animation:decorFloat3 6.5s 1s infinite"><svg viewBox="0 0 35 50"><path d="M17 50c0-15 1-25 0-32-1 2-3 2-4 1" stroke="#7a9a4a" stroke-width="2" fill="none"/><ellipse cx="16" cy="12" rx="8" ry="10" fill="#f0c0c0" stroke="#d09090" stroke-width="1.5"/><path d="M10 8c-2-3 0-6 3-4 2 2 0 5-2 4" fill="#c8e0a0" stroke="#7a9a4a" stroke-width="1"/></svg></div>
+<div class="decor-el decor-10" style="top:88%;right:6%;width:50px;height:40px;animation:decorFloat1 9s 1.5s infinite"><svg viewBox="0 0 50 40"><circle cx="10" cy="20" r="4" fill="#f0d0a0"/><circle cx="25" cy="10" r="3" fill="#c0d8f0"/><circle cx="40" cy="22" r="5" fill="#f0b0b0"/><circle cx="18" cy="32" r="3.5" fill="#c8e0b0"/><circle cx="35" cy="34" r="3" fill="#f0c0d0"/></svg></div>
+<div class="decor-el decor-11" style="top:32%;right:14%;width:35px;height:40px;animation:decorFloat3 8s 2.5s infinite"><svg viewBox="0 0 35 40"><rect x="13" y="18" width="6" height="16" rx="3" fill="#f5efe0"/><ellipse cx="16" cy="16" rx="14" ry="10" fill="#e08060" stroke="#c06040" stroke-width="1.5"/><circle cx="10" cy="12" r="2.5" fill="#fff" opacity="0.7"/><circle cx="20" cy="10" r="2" fill="#fff" opacity="0.7"/><circle cx="15" cy="18" r="1.5" fill="#fff" opacity="0.7"/></svg></div>
+<div class="decor-el decor-12" style="top:15%;right:22%;width:45px;height:40px;animation:decorFloat2 7s 0.5s infinite"><svg viewBox="0 0 45 40"><ellipse cx="25" cy="20" rx="12" ry="9" fill="#f0c8e0" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="14" cy="20" rx="10" ry="8" fill="#e8b8d8" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="25" cy="32" rx="8" ry="6" fill="#f0c8e0" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="16" cy="32" rx="7" ry="5" fill="#e8b8d8" stroke="#d0a0c0" stroke-width="1.5"/><line x1="20" y1="18" x2="20" y2="34" stroke="#a080a0" stroke-width="2"/></svg></div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="site-logo"><img src="logo.png" alt="logo" class="site-logo-img">土豆熬孬土豆</a>
+        <nav>
+            <ul class="site-nav">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="#">教程</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+
+    <div class="article-header">
+        <a href="javascript:history.back()" class="back-link">&larr; 返回上一页</a>
+        <h1>小白向：用 Claude Code 从零搭建个人网站全教程</h1>
+        <p class="subtitle">零基础、不写代码、全程用聊天的方式，跟 Claude Code 一起搭建你的第一个个人网站</p>
+        <div class="meta-row">
+            <span>整理：土豆</span>
+        </div>
+    </div>
+
+    <div class="toc-card">
+        <h3>目录</h3>
+        <ol>
+            <li><a href="#s0">开始之前：你需要准备什么</a></li>
+            <li><a href="#s1">第一步：跟 Claude Code 说出你的想法</a></li>
+            <li><a href="#s2">第二步：预览你的网站</a></li>
+            <li><a href="#s3">第三步：修改内容（不需要懂代码）</a></li>
+            <li><a href="#s4">第四步：添加新文章</a></li>
+            <li><a href="#s5">第五步：让全世界看到你的网站</a></li>
+            <li><a href="#s6">第六步：日常更新网站</a></li>
+            <li><a href="#s7">常用提示词模板（可直接复制）</a></li>
+            <li><a href="#s8">我遇到过的坑</a></li>
+            <li><a href="#s9">总结</a></li>
+        </ol>
+    </div>
+
+    <!-- ====== Section 0: 准备 ====== -->
+    <section class="step" id="s0">
+        <div class="step-header">
+            <div class="step-number">0</div>
+            <h2>开始之前：你需要准备什么</h2>
+        </div>
+        <p>你不需要会写代码，不需要懂 HTML/CSS，不需要懂服务器。你只需要：</p>
+        <div class="tip">
+            <div class="tip-title">准备工作清单</div>
+            <p>1. 一台电脑（Windows 或 Mac 都行）</p>
+            <p>2. 安装了 Claude Code（如果还没装，先看本站的《Claude Code 安装教程》）</p>
+            <p>3. 一个 GitHub 或 Gitee 账号（注册免费，几分钟搞定）</p>
+            <p>4. 耐心——过程中可能会遇到网络问题，别急，一个个解决</p>
+        </div>
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>Claude Code 终端界面截图，展示对话开始的画面</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 1: 说出想法 ====== -->
+    <section class="step" id="s1">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <h2>第一步：跟 Claude Code 说出你的想法</h2>
+        </div>
+        <p>这是最关键的一步。<strong>你不需要懂技术术语，用大白话说就行。</strong></p>
+        <p>我当时的原话就一句话：</p>
+
+        <div class="prompt-card">
+            <div class="prompt-label">我实际用的提示词</div>
+            <div class="prompt-text">我想要一个自己的网站，然后第一个内容就是分享 Claude Code 安装教程</div>
+        </div>
+
+        <p>就这一句话，Claude Code 就开始帮我干活了。它会追问你几个问题，你像跟朋友聊天一样回答就行：</p>
+
+        <div class="prompt-card">
+            <div class="prompt-label">Claude Code 问：网站叫什么名字？</div>
+            <div class="prompt-text">我答：叫「土豆熬孬土豆」（随便起的，后面可以改）</div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-label">Claude Code 问：想要什么视觉风格？</div>
+            <div class="prompt-text">我答：暖色雅致</div>
+        </div>
+
+        <p>几秒钟后，它就帮我生成了完整的两页网站：一个首页 + 一篇教程文章，配色、字体、排版全都弄好了。</p>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>首次对话截图：用户说「我想要一个自己的网站」，Claude Code 追问细节，然后生成代码</div>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">关键技巧</div>
+            <p>描述网站时可以说这些方面：网站用途（分享教程/写博客/展示作品）、喜欢的颜色、参考某个你喜欢的网站风格。</p>
+            <p>不确定怎么说？直接说「我要一个简单干净的网站放教程」，Claude Code 会自己补全细节。</p>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 2: 预览 ====== -->
+    <section class="step" id="s2">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <h2>第二步：预览你的网站</h2>
+        </div>
+        <p>代码写好了，怎么看效果？直接问：</p>
+
+        <div class="prompt-card">
+            <div class="prompt-label">你只需要说</div>
+            <div class="prompt-text">我想看看网页效果 / 怎么在浏览器里打开我的网页</div>
+        </div>
+
+        <p>Claude Code 会帮你安装 VS Code（免费的代码编辑器）和 Live Server 插件。装好之后，右键 HTML 文件 → Open with Live Server，浏览器就会自动打开你的网站。</p>
+        <p>从此以后，你在 VS Code 里改完代码 Ctrl+S 保存，浏览器自动刷新预览，不用手动操作。</p>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>VS Code 界面：左侧文件列表，右侧代码编辑区，右下角 Go Live 按钮。旁边浏览器显示网站效果</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 3: 修改内容 ====== -->
+    <section class="step" id="s3">
+        <div class="step-header">
+            <div class="step-number">3</div>
+            <h2>第三步：修改内容（不需要懂代码）</h2>
+        </div>
+        <p>打开 HTML 文件后，你会看到一堆英文标签和中文文字混在一起。<strong>你只需要关注中文文字部分</strong>，直接改，像改 Word 一样。</p>
+        <p>改完按 Ctrl+S 保存，浏览器自动刷新就能看到效果。改错了按 Ctrl+Z 撤回。</p>
+
+        <div class="tip">
+            <div class="tip-title">我的经验</div>
+            <p>改标题 → 找 h1 附近的中文</p>
+            <p>改正文 → 找 p 附近的中文</p>
+            <p>如果找不到要改的文字在哪，直接问 Claude Code：「帮我把 xxx 这句话改成 yyy」，它会精准告诉你在第几行。</p>
+        </div>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>VS Code 中编辑 HTML 文件的画面，红框标出可以修改的中文文字区域</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 4: 加新文章 ====== -->
+    <section class="step" id="s4">
+        <div class="step-header">
+            <div class="step-number">4</div>
+            <h2>第四步：添加新文章</h2>
+        </div>
+        <p>当你想发第二篇教程时，不需要从头写代码。直接问：</p>
+
+        <div class="prompt-card">
+            <div class="prompt-label">你只需要说</div>
+            <div class="prompt-text">我想要添加新文章，但不想自己写代码，帮我做一个空白模板</div>
+        </div>
+
+        <p>Claude Code 会创建一个 template.html。以后加新文章就三步：</p>
+        <p>1. 复制 template.html，重命名（比如 new-post.html）</p>
+        <p>2. 打开文件，Ctrl+F 搜索 <code>【</code>（中文方括号），把所有占位符替换成你的内容</p>
+        <p>3. 在 index.html 里复制一张文章卡片，把链接改成你的新文件名</p>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>左侧：template.html 中带【】占位符的画面；右侧：替换后的实际文章效果</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 5: 部署 ====== -->
+    <section class="step" id="s5">
+        <div class="step-header">
+            <div class="step-number">5</div>
+            <h2>第五步：让全世界看到你的网站（部署）</h2>
+        </div>
+        <p>现在网站只是你电脑上的本地文件，别人看不到。需要「部署」到互联网。</p>
+
+        <div class="prompt-card">
+            <div class="prompt-label">你只需要说</div>
+            <div class="prompt-text">帮我部署到网上 / 我想让其他人也能访问我的网站</div>
+        </div>
+
+        <p>以下是我实际经历的完整过程——</p>
+
+        <h3 style="font-size:1rem;margin-top:20px;">方案一：GitHub Pages —— 失败了</h3>
+        <p>Claude Code 首先尝试了 GitHub Pages。但因为网络问题（GitHub 在国内被墙），连不上，放弃了。</p>
+
+        <h3 style="font-size:1rem;margin-top:16px;">方案二：Gitee Pages —— 也失败了</h3>
+        <p>代码成功推到了 Gitee（码云，国内版 GitHub），但在后台找了很久，Gitee Pages 入口藏得太深，而且需要实名认证。</p>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>Gitee 仓库界面，红圈标出「服务」菜单和里面找不到 Pages 的情况</div>
+        </div>
+
+        <h3 style="font-size:1rem;margin-top:16px;">方案三：Netlify —— 成功了…一段时间</h3>
+        <p>Claude Code 用 Netlify 部署成功。拖拽上传就行，很方便。具体过程：</p>
+        <p>1. Claude Code 用命令行把网站文件打包上传到 Netlify</p>
+        <p>2. 获得了一个临时网址</p>
+        <p>3. 我打开认领链接，用 GitHub 账号登录 Netlify</p>
+        <p>4. 在 Netlify 后台把网站名从随机字符改成了 elwynlee</p>
+        <p>5. 网站顺利上线：elwynlee.netlify.app</p>
+
+        <h3 style="font-size:1rem;margin-top:16px;">方案四：Netlify 额度用完 → 迁到 Vercel</h3>
+        <p>使用了一段时间后，因为我频繁更新网站（一天部署好几次），Netlify 的免费额度用完了，部署被冻结。</p>
+        <p>于是 Claude Code 帮我换到了 <strong>Vercel</strong>，同样免费，额度更宽松：</p>
+        <p>1. Claude Code 帮我登录 Vercel，用命令 `npx vercel --prod --yes` 一键部署</p>
+        <p>2. 获得新网址：elwynlee-site.vercel.app</p>
+        <p>3. 还帮我创建了一个 `更新网站.bat` 文件</p>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>Vercel 部署成功画面</div>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">最终经验</div>
+            <p>经历了四个方案才最终稳定下来：GitHub（被墙）→ Gitee（找不到 Pages）→ Netlify（额度用完）→ Vercel（目前最佳）。</p>
+            <p>重点不是哪个平台最好，而是<strong>Claude Code 会帮你不断尝试</strong>。你不需要自己研究这些平台，告诉它「帮我部署」就行。</p>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 6: 更新 ====== -->
+    <section class="step" id="s6">
+        <div class="step-header">
+            <div class="step-number">6</div>
+            <h2>第六步：日常更新网站</h2>
+        </div>
+        <p>网站上线后，日常更新超级简单：</p>
+        <p>1. 用 VS Code 打开要改的 HTML 文件，改文字</p>
+        <p>2. Ctrl+S 保存</p>
+        <p>3. <strong>双击「更新网站.bat」</strong>（Claude Code 帮你建好的）</p>
+        <p>4. 等几秒，网站更新完成</p>
+
+        <div class="tip">
+            <div class="tip-title">就这么简单</div>
+            <p>不需要打开任何网页、不需要登录、不需要拖拽。改完 → 保存 → 双击 bat → 搞定。</p>
+        </div>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>双击更新网站.bat 后终端显示部署成功的画面</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 7: 提示词模板 ====== -->
+    <section class="step" id="s7">
+        <div class="step-header">
+            <div class="step-number">7</div>
+            <h2>常用提示词模板（可直接复制）</h2>
+        </div>
+        <p>以下是我实际用过、亲测有效的提示词。直接用大白话跟 Claude Code 说就行：</p>
+
+        <div class="prompt-card">
+            <div class="prompt-label">创建网站</div>
+            <div class="prompt-text">我想要一个自己的网站，用来分享教程和笔记。风格要简单干净的，颜色偏暖色系</div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-label">添加新文章</div>
+            <div class="prompt-text">我要加一篇新文章，标题是「xxx」。帮我基于模板创建</div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-label">改颜色/风格</div>
+            <div class="prompt-text">我想把网站的强调色从橙色改成蓝色 / 我想要暗色模式</div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-label">改某个内容</div>
+            <div class="prompt-text">帮我把教程里 xxx 这句话改成 yyy</div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-label">部署/更新网站</div>
+            <div class="prompt-text">帮我部署到网上 / 我改了文件帮我更新网站 / 帮我做一个一键更新网站的脚本</div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-label">添加功能</div>
+            <div class="prompt-text">我想在首页加一个搜索框 / 我想加评论区 / 我想让手机上看也好看</div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-label">出问题了</div>
+            <div class="prompt-text">我的网站打不开了，帮我检查一下 / 这张图片显示不出来，怎么办</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 8: 踩坑 ====== -->
+    <section class="step" id="s8">
+        <div class="step-header">
+            <div class="step-number">8</div>
+            <h2>我遇到过的坑</h2>
+        </div>
+
+        <div class="qa-list">
+            <div class="qa-item">
+                <div class="qa-q">GitHub 连不上怎么办？</div>
+                <div class="qa-a">让 Claude Code 换 Gitee。Gitee 不行换 Netlify，Netlify 不行换 Vercel。总有一个能用的。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">图片拖到网站里不显示？</div>
+                <div class="qa-a">确认图片文件（.png 或 .jpg）和 .html 文件在同一个文件夹里。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">改完代码网站没变化？</div>
+                <div class="qa-a">检查三件事：Ctrl+S 保存了没？浏览器刷新了没（按 F5）？双击「更新网站.bat」推上线了没？</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">部署后网站还是旧版？</div>
+                <div class="qa-a">等几十秒，CDN 缓存刷新需要时间。如果一分钟后还是旧的，再双击一次「更新网站.bat」。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">HTML 文件直接双击打开显示乱码？</div>
+                <div class="qa-a">让 Claude Code 给你加个 UTF-8 BOM 头。它会自动修复。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">部署平台额度用完了怎么办？</div>
+                <div class="qa-a">告诉 Claude Code「我的网站部署额度用完了，帮我换个平台」，它会帮你迁移。我们就是从 Netlify 迁到 Vercel 的。</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ====== Section 9: 总结 ====== -->
+    <section class="step" id="s9">
+        <div class="step-header">
+            <div class="step-number">9</div>
+            <h2>总结：你需要的全部技能</h2>
+        </div>
+        <p>三个技能就够：</p>
+        <p>1. <strong>会打字</strong>，能用大白话跟 Claude Code 描述你想要的</p>
+        <p>2. <strong>不慌</strong>，遇到报错把错误信息原样复制给 Claude Code</p>
+        <p>3. <strong>愿意试</strong>，Claude Code 提供的不同方案都试试，总有一个能用</p>
+
+        <div class="tip">
+            <div class="tip-title">一句话总结</div>
+            <p>你不需要会写代码、不需要懂 HTML/CSS、不需要懂服务器。<strong>你只需要会提问。</strong></p>
+        </div>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>本网站首页截图，展示最终成果</div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <span class="footer-brand">土豆熬孬土豆</span>
+    本站由 <a href="index.html">Elwyn</a> 维护
+</footer>
+
+<script>
+(function() {
+    var bar = document.getElementById('progressBar');
+    window.addEventListener('scroll', function() {
+        var h = document.body.scrollHeight - window.innerHeight;
+        bar.style.width = h > 0 ? Math.min(100, (window.scrollY / h) * 100) + '%' : '0%';
+    }, { passive: true });
+})();
+function copyCode(btn) {
+    var code = btn.parentElement.querySelector('code');
+    navigator.clipboard.writeText(code.innerText).then(function() {
+        btn.textContent = '已复制'; btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>
