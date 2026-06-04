@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>腾讯文档编辑 Skill — 土豆熬孬土豆</title>
+    <meta name="description" content="让 Claude Code 直接创建和编辑腾讯文档：智能文档、表格、PPT、思维导图。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="site.css">
+</head>
+<body>
+<!-- 全站装饰元素 -->
+<div class="decor-el decor-1" style="top:5%;left:3%;width:55px;height:55px;animation:decorFloat1 7s infinite"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="8" fill="#f0c040"/><ellipse cx="30" cy="12" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5"/><ellipse cx="46" cy="24" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(72,30,30)"/><ellipse cx="44" cy="40" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(144,30,30)"/><ellipse cx="22" cy="44" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(216,30,30)"/><ellipse cx="14" cy="24" rx="7" ry="10" fill="#fff8f0" stroke="#d4a040" stroke-width="1.5" transform="rotate(288,30,30)"/></svg></div>
+<div class="decor-el decor-2" style="top:14%;right:4%;width:45px;height:60px;animation:decorFloat2 8s 1s infinite"><svg viewBox="0 0 50 60"><path d="M25 55c-1-3-1-8 0-10 2 0 4 0 6 1" stroke="#7a9a4a" stroke-width="2" fill="none"/><path d="M10 22c3-6 12-10 15-5 3 6-2 12-8 10" fill="#f0a0b0" stroke="#d08090" stroke-width="1.5"/><path d="M25 18c0-8 8-12 14-6 4 4 0 12-6 10" fill="#f0b0c0" stroke="#d08090" stroke-width="1.5"/><path d="M28 25c6-4 14 0 12 8-2 6-10 6-12 0" fill="#f0a0b0" stroke="#d08090" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-3" style="top:40%;left:2%;width:50px;height:50px;animation:decorFloat3 9s 0.5s infinite"><svg viewBox="0 0 50 50"><path d="M10 40c2-10 15-20 25-18 5 1 8 6 5 10-3 5-10 4-12 0-1-3 2-6 4-4" stroke="#7a9a4a" stroke-width="2" fill="#c8e0a0" stroke-linecap="round"/><path d="M14 38c1-8 8-14 16-12" stroke="#6a8a3a" stroke-width="1.5" fill="none"/></svg></div>
+<div class="decor-el decor-4" style="top:35%;right:3%;width:40px;height:40px;animation:decorFloat1 6s 2s infinite"><svg viewBox="0 0 40 40"><path d="M20 4l3 10 10 2-7 8 2 11-8-5-8 5 2-11-7-8 10-2z" fill="#f0d060" stroke="#d0b040" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-5" style="top:65%;left:5%;width:40px;height:40px;animation:decorFloat2 7.5s 1.5s infinite"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="4" fill="#f0f0c0"/><circle cx="20" cy="8" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/><circle cx="30" cy="16" r="7" fill="#c8ddf4" stroke="#8090c0" stroke-width="1.5"/><circle cx="28" cy="28" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/><circle cx="14" cy="28" r="7" fill="#c8ddf4" stroke="#8090c0" stroke-width="1.5"/><circle cx="10" cy="16" r="7" fill="#c0d8f0" stroke="#8090c0" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-6" style="top:72%;right:3%;width:55px;height:45px;animation:decorFloat3 8.5s 0.8s infinite"><svg viewBox="0 0 55 45"><path d="M5 35c5-12 20-22 30-20 4 1 8 4 6 8-2 5-8 4-10 1-1-2 2-5 4-3" stroke="#7a9a4a" stroke-width="2" fill="#c8e8b0" stroke-linecap="round"/><path d="M25 15c-3-8-10-12-15-8-3 3 0 8 5 6" stroke="#6a8a3a" stroke-width="1.8" fill="#b8d898"/><path d="M32 20c4-6 12-8 15-3 2 4-2 8-7 5" stroke="#6a8a3a" stroke-width="1.8" fill="#b8d898"/></svg></div>
+<div class="decor-el decor-7" style="top:22%;left:48%;width:35px;height:35px;animation:decorFloat1 10s 3s infinite"><svg viewBox="0 0 35 35"><path d="M17 30c-8-4-15-12-15-18 0-6 4-10 9-10 4 0 6 3 6 6 0-3 2-6 6-6 5 0 9 4 9 10 0 6-7 14-15 18z" fill="#f0b0b0" stroke="#d08080" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-8" style="top:58%;left:52%;width:50px;height:50px;animation:decorFloat2 7s 2s infinite"><svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="6" fill="#3a2a1a"/><circle cx="25" cy="10" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/><circle cx="38" cy="18" r="10" fill="#f0b050" stroke="#d08030" stroke-width="1.5"/><circle cx="37" cy="34" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/><circle cx="18" cy="38" r="10" fill="#f0b050" stroke="#d08030" stroke-width="1.5"/><circle cx="12" cy="18" r="10" fill="#f0a040" stroke="#d08030" stroke-width="1.5"/></svg></div>
+<div class="decor-el decor-9" style="top:85%;left:8%;width:35px;height:50px;animation:decorFloat3 6.5s 1s infinite"><svg viewBox="0 0 35 50"><path d="M17 50c0-15 1-25 0-32-1 2-3 2-4 1" stroke="#7a9a4a" stroke-width="2" fill="none"/><ellipse cx="16" cy="12" rx="8" ry="10" fill="#f0c0c0" stroke="#d09090" stroke-width="1.5"/><path d="M10 8c-2-3 0-6 3-4 2 2 0 5-2 4" fill="#c8e0a0" stroke="#7a9a4a" stroke-width="1"/></svg></div>
+<div class="decor-el decor-10" style="top:88%;right:6%;width:50px;height:40px;animation:decorFloat1 9s 1.5s infinite"><svg viewBox="0 0 50 40"><circle cx="10" cy="20" r="4" fill="#f0d0a0"/><circle cx="25" cy="10" r="3" fill="#c0d8f0"/><circle cx="40" cy="22" r="5" fill="#f0b0b0"/><circle cx="18" cy="32" r="3.5" fill="#c8e0b0"/><circle cx="35" cy="34" r="3" fill="#f0c0d0"/></svg></div>
+<div class="decor-el decor-11" style="top:32%;right:14%;width:35px;height:40px;animation:decorFloat3 8s 2.5s infinite"><svg viewBox="0 0 35 40"><rect x="13" y="18" width="6" height="16" rx="3" fill="#f5efe0"/><ellipse cx="16" cy="16" rx="14" ry="10" fill="#e08060" stroke="#c06040" stroke-width="1.5"/><circle cx="10" cy="12" r="2.5" fill="#fff" opacity="0.7"/><circle cx="20" cy="10" r="2" fill="#fff" opacity="0.7"/><circle cx="15" cy="18" r="1.5" fill="#fff" opacity="0.7"/></svg></div>
+<div class="decor-el decor-12" style="top:15%;right:22%;width:45px;height:40px;animation:decorFloat2 7s 0.5s infinite"><svg viewBox="0 0 45 40"><ellipse cx="25" cy="20" rx="12" ry="9" fill="#f0c8e0" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="14" cy="20" rx="10" ry="8" fill="#e8b8d8" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="25" cy="32" rx="8" ry="6" fill="#f0c8e0" stroke="#d0a0c0" stroke-width="1.5"/><ellipse cx="16" cy="32" rx="7" ry="5" fill="#e8b8d8" stroke="#d0a0c0" stroke-width="1.5"/><line x1="20" y1="18" x2="20" y2="34" stroke="#a080a0" stroke-width="2"/></svg></div>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="site-logo"><img src="logo.png" alt="logo" class="site-logo-img">土豆熬孬土豆</a>
+        <nav>
+            <ul class="site-nav">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="tutorials.html">教程</a></li>
+                <li><a href="skills.html">Skills</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+
+    <div class="article-header">
+        <a href="javascript:history.back()" class="back-link">&larr; 返回上一页</a>
+        <h1>腾讯文档编辑 Skill</h1>
+        <p class="subtitle">让 Claude Code 直接创建和编辑腾讯文档：智能文档、表格、PPT、思维导图，全类型支持</p>
+    </div>
+
+    <!-- 安装方式 -->
+    <div class="tip" style="margin-bottom:24px;">
+        <div class="tip-title">🚀 安装方式</div>
+        <p>在终端复制下面两条命令，逐条执行即可。需要先装 SkillHub CLI，再通过它安装 tencent-docs skill：</p>
+    </div>
+
+    <!-- Step 1: Install CLI -->
+    <div class="step">
+        <p style="font-weight:600;margin-bottom:4px;">第一步：安装 SkillHub CLI</p>
+        <div class="code-block">
+            <span class="lang-tag">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <code>curl -fsSL https://skillhub.cn/install/install.sh | bash</code>
+        </div>
+    </div>
+
+    <!-- Step 2: Install skill -->
+    <div class="step">
+        <p style="font-weight:600;margin-bottom:4px;">第二步：安装 tencent-docs skill</p>
+        <div class="code-block">
+            <span class="lang-tag">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <code>skillhub install tencent-docs</code>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- 能干什么 -->
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">📋</div>
+            <h2>装好之后能干什么？</h2>
+        </div>
+        <p>装好之后，Claude Code 就能直接操作腾讯文档了。不需要打开网页手动编辑，直接在对话里说：</p>
+
+        <div class="qa-list" style="margin-top:16px;">
+            <div class="qa-item">
+                <div class="qa-q">"帮我创建一个智能文档，标题是xxx"</div>
+                <div class="qa-a">自动创建排版美观的在线文档，支持标题、列表、表格、代码块、分栏等</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">"帮我把这段内容保存到腾讯文档"</div>
+                <div class="qa-a">直接把对话中生成的内容沉淀到云端文档</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">"帮我创建一个 Excel 表格"</div>
+                <div class="qa-a">创建在线表格，支持公式、筛选、合并单元格等</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">"帮我做一个 PPT"</div>
+                <div class="qa-a">自动生成幻灯片演示文稿</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">"帮我画一个思维导图 / 流程图"</div>
+                <div class="qa-a">创建思维导图或流程图，可视化展示知识结构</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-q">"帮我修改那个文档里的xxx"</div>
+                <div class="qa-a">读取已有文档内容，定位到具体位置进行修改</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- 支持的文档类型 -->
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">📄</div>
+            <h2>支持的文档类型</h2>
+        </div>
+        <p>一个 Skill 覆盖了腾讯文档的全部品类：</p>
+
+        <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem;">
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:8px 12px;font-weight:600;">智能文档</td>
+                <td style="padding:8px 12px;color:var(--text-secondary);">排版最美观，适合写文章、报告、笔记</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:8px 12px;font-weight:600;">Word 文档</td>
+                <td style="padding:8px 12px;color:var(--text-secondary);">传统格式，支持精细排版</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:8px 12px;font-weight:600;">Excel / 智能表格</td>
+                <td style="padding:8px 12px;color:var(--text-secondary);">数据处理、公式计算、多视图</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:8px 12px;font-weight:600;">PPT 幻灯片</td>
+                <td style="padding:8px 12px;color:var(--text-secondary);">AI 生成演示文稿</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:8px 12px;font-weight:600;">思维导图</td>
+                <td style="padding:8px 12px;color:var(--text-secondary);">层次化知识整理</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:8px 12px;font-weight:600;">流程图</td>
+                <td style="padding:8px 12px;color:var(--text-secondary);">流程架构可视化</td>
+            </tr>
+        </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- 使用案例 -->
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">💡</div>
+            <h2>实际使用案例</h2>
+        </div>
+
+        <p>比如你想把和 Claude Code 的对话内容整理成文档保存：</p>
+
+        <div class="prompt-card">
+            <div class="prompt-label">你只需要说</div>
+            <div class="prompt-text">帮我把今天聊的网站搭建过程整理成一篇智能文档，标题叫「个人网站搭建与维护教程」，保存到腾讯文档</div>
+        </div>
+
+        <p>Claude Code 会自动创建文档、排版、插入目录和章节，并返回文档链接。你直接在浏览器打开就能查看和分享。</p>
+
+        <div class="img-placeholder">
+            <div><strong>📷 待配图</strong>腾讯文档 Skill 使用演示：左边是对话，右边是生成的智能文档效果</div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- 注意事项 -->
+    <section class="step">
+        <div class="step-header">
+            <div class="step-number">⚠️</div>
+            <h2>注意事项</h2>
+        </div>
+        <div class="warning">
+            <div class="tip-title">首次使用需要授权</div>
+            <p>第一次调用腾讯文档时，会提示你登录授权。按提示扫码或点击链接登录即可。</p>
+        </div>
+        <div class="warning">
+            <div class="tip-title">内容太长时的技巧</div>
+            <p>如果文章内容很多（超过两三千字），Claude Code 可能会遇到命令行长度限制。这时候告诉它「分段追加到文档末尾」，它会自动拆开处理。</p>
+        </div>
+        <div class="warning">
+            <div class="tip-title">需要腾讯文档账号</div>
+            <p>生成的文档保存在你的腾讯文档账号下（docs.qq.com），需要有腾讯文档账号（微信/QQ 登录即可）。</p>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <span class="footer-brand">土豆熬孬土豆</span>
+    本站由 <a href="index.html">Elwyn</a> 维护
+</footer>
+
+<script>
+(function() {
+    var bar = document.getElementById('progressBar');
+    window.addEventListener('scroll', function() {
+        var h = document.body.scrollHeight - window.innerHeight;
+        bar.style.width = h > 0 ? Math.min(100, (window.scrollY / h) * 100) + '%' : '0%';
+    }, { passive: true });
+})();
+function copyCode(btn) {
+    var code = btn.parentElement.querySelector('code');
+    navigator.clipboard.writeText(code.innerText).then(function() {
+        btn.textContent = '已复制'; btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>
